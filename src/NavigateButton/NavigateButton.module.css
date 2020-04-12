@@ -1,0 +1,40 @@
+.NavigateButton {
+  background: none;
+  border: none;
+  outline: none;
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  cursor: pointer;
+  z-index: 2;
+}
+
+.NavigateButton--back {
+  left: 1rem;
+}
+
+.NavigateButton--forward {
+  right: 1rem;
+}
+
+.NavigateButton__icon {
+  width: 0;
+  height: 0;
+  border-style: solid;
+  transition: transform 0.3s ease;
+}
+
+.NavigateButton--back .NavigateButton__icon {
+  border-width: 2rem 2rem 2rem 0;
+  border-color: transparent #fff transparent transparent;
+}
+
+.NavigateButton--forward .NavigateButton__icon {
+  border-width: 2rem 0 2rem 2rem ;
+  border-color: transparent transparent transparent #fff;
+}
+
+.NavigateButton--back:hover .NavigateButton__icon,
+.NavigateButton--forward:hover .NavigateButton__icon {
+  transform: scale(1.2);
+}

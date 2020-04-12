@@ -2,8 +2,6 @@ import React, { FC, useEffect, useState, useContext } from 'react';
 import axios from 'axios';
 import { motion } from 'framer-motion';
 import { Context } from '../Context';
-import { Preloader } from '../Preloader';
-import { ErrorIcon } from '../ErrorIcon';
 import { getLang } from '../getLang';
 import styles from './Image.module.css';
 
@@ -47,8 +45,9 @@ const transition = {
 };
 
 export const Image: FC<IProps> = React.memo((props) => {
-  const { page, direction, onDrag } = useContext(Context);
+  const { page, direction, components, onDrag } = useContext(Context);
   const { url, ...otherProps } = props;
+  const { Preloader, ErrorMessage } = components;
   const [state, setState] = useState<IState>({
     isLoading: true,
     data: undefined,
@@ -94,10 +93,7 @@ export const Image: FC<IProps> = React.memo((props) => {
     }
     case state.error: {
       content = (
-        <div>
-          <ErrorIcon />
-          <div>{lang.errorMessage}</div>
-        </div>
+        <ErrorMessage message={lang.errorMessage} />
       );
       break;
     }

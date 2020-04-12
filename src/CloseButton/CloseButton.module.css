@@ -1,0 +1,17 @@
+.CloseButton {
+  background: none;
+  border: none;
+  outline: none;
+  color: #fff;
+  position: absolute;
+  top: 1.5rem;
+  right: 1.5rem;
+  font-size: 3rem;
+  cursor: pointer;
+  transition: transform 0.3s ease;
+  z-index: 2;
+}
+
+.CloseButton:hover {
+  transform: scale(1.2);
+}

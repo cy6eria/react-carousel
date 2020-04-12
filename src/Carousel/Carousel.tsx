@@ -6,10 +6,13 @@ import { wrap } from '@popmotion/popcorn';
 import { AnimatePresence } from 'framer-motion';
 import { Context } from '../Context';
 import { getLang } from '../getLang';
+import { defaultComponents } from '../defaultComponents';
 import styles from './Carousel.module.css';
 
 interface IProps {
-  onClose: (e: MouseEvent<HTMLButtonElement>) => void;
+  className?: string;
+  onClose?: (e: MouseEvent<HTMLButtonElement>) => void;
+  components?: object;
 }
 
 const swipeConfidenceThreshold = 10000;
@@ -19,8 +22,17 @@ const swipePower = (offset: number, velocity: number) => {
 };
 
 export const Carousel: FC<IProps> = (props) => {
-  const { onClose, children } = props;
+  const { onClose, className, components, children } = props;
   const lang = getLang();
+
+  const mergedComponents = useMemo(() => {
+    return {
+      ...defaultComponents,
+      ...components,
+    }
+  }, [components]);
+
+  const { CloseButton, BackButton, ForwardButton } = mergedComponents;
 
   const [[page, direction], setPage] = useState<[number, number]>([0, 0]);
 
@@ -49,40 +61,40 @@ export const Carousel: FC<IProps> = (props) => {
   }, []);
 
   const context = useMemo(() => ({
+    components: mergedComponents,
     page, direction,
     onDrag: handleDrag,
   }), [page, direction]);
 
   return (
     <Context.Provider value={context}>
-      <div className={styles.Carousel}>
+      <div className={cx(styles.Carousel, className)}>
         <AnimatePresence initial={false} custom={direction}>
           {children[imageIndex]}
         </AnimatePresence>
-        <button
-          className={cx(styles['Carousel__button'], styles['Carousel__button--prev'])}
-          onClick={handlePrev}
-        >
-          <div className={styles.Carousel__icon} />
-        </button>
-        <button
-          className={cx(styles['Carousel__button'], styles['Carousel__button--next'])}
-          onClick={handleNext}
-        >
-          <div className={styles.Carousel__icon} />
-        </button>
+        <BackButton
+          label={lang.back}
+          appearance="back"
+          onNavigate={handlePrev}
+        />
+        <ForwardButton
+          label={lang.forward}
+          appearance="forward"
+          onNavigate={handleNext}
+        />
         {onClose && (
-          <button
-            aria-label={lang.close}
-            className={styles['Carousel__close']}
+          <CloseButton
+            label={lang.close}
             onClick={onClose}
-          >
-            &times;
-          </button>
+          />
         )}
       </div>
     </Context.Provider>
   );
 };
+
+Carousel.defaultProps = {
+
+}
 
 export default Carousel;
